@@ -127,6 +127,13 @@ body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased
 #bot.q-zap .led{animation:led .1s infinite alternate;fill:var(--yellow)}
 #bot.q-zap .bob{animation:qShake .08s linear 20}
 @keyframes qShake{0%{transform:translateX(-2px)}50%{transform:translateX(2px)}100%{transform:translateX(0)}}
+#bot.q-laugh .bob{animation:qLaugh .18s ease-in-out 16 alternate}
+@keyframes qLaugh{from{transform:translateY(0) rotate(-4deg)}to{transform:translateY(-7px) rotate(4deg)}}
+#bot.q-laugh .eyes{opacity:0}
+#bot.q-laugh .happy{opacity:1}
+#bot.q-laugh .arm-l{animation:none;transform:rotate(35deg)}
+#bot.q-laugh .arm-r{transform:rotate(-35deg)}
+#bot.q-laugh .led{animation:led .12s infinite alternate}
 #bot.q-wave .arm-r{animation:wave2 1s ease-in-out 3}
 @keyframes wave2{0%,100%{transform:rotate(0)}50%{transform:rotate(-150deg)}}
 #bot.q-wave .arm-l{animation:none}
@@ -542,7 +549,8 @@ const DATA = {
     "Why did the transistor go to school? To get a little more gain.",
     "How do you comfort a JavaScript bug? You console it.",
     "The best thing about a Boolean is that even if you're wrong, you're only off by a bit.",
-    "Why did the programmer go outside? Just kidding."
+    "Why did the programmer go outside? Just kidding.",
+    "Computer? I HARDLY EVEN KNOW HER!"
   ],
   linktree: "https://linktr.ee/compeclub"
 };
@@ -716,6 +724,7 @@ function playTicker(){
   if (!it) return setTimeout(playTicker, 2000);
   el.innerHTML = (it.tag ? `<b class="${TAG_CLASS[it.tag] || "c-y"}">${esc(it.tag)}</b>` : LOL) + esc(it.text);
   el.className = "tk-item"; void el.offsetWidth; el.className = "tk-item in";
+  if (/HARDLY EVEN KNOW HER/.test(it.text)) setTimeout(() => quirk("laugh"), 900); // the robot's favourite joke
   const hold = 3500 + it.text.length * 55; // longer items stay up longer
   setTimeout(() => {
     el.className = "tk-item out";
@@ -765,6 +774,7 @@ const QUIRKS = {
   scan:   { ms: 2800, lines: ["SCANNING FOR SNACKERS...", "TARGET: HUNGRY HUMAN.", "SCANNING... 100% CUTE."] },
   zap:    { ms: 2100, lines: ["BZZT! FULLY CHARGED.", "OW, STATIC!", "+5V ACQUIRED!"] },
   wave:   { ms: 3000, lines: ["HI THERE!", "HELLO, WORLD!", "HEY YOU! YES YOU!"] },
+  laugh:  { ms: 3000, lines: ["HA HA HA!", "LOL! 01001100 01001111 01001100", "HAHA, I'M DEAD. (I'M NOT.)"] },
 };
 let quirkTimer = null;
 function quirk(name){
