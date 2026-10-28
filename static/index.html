@@ -151,7 +151,12 @@ body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased
 .cols div:nth-child(2),.cols div:nth-child(3){text-align:right}
 .list{flex:1;display:grid;grid-template-rows:repeat(17,1fr);gap:4px;min-height:0;padding-bottom:6px}
 .row{position:relative;min-height:0;border-radius:12px;background:rgba(255,255,255,.025);--st:var(--teal)}
-.row:nth-child(odd){background:rgba(164,107,255,.08)}
+.row.alt{background:rgba(164,107,255,.08)}
+.cat{display:flex;align-items:center;gap:14px;padding:0 10px;min-height:0;font-family:var(--pixel);
+  font-size:calc(20px * var(--rs,1));letter-spacing:2px;color:var(--c)}
+.cat .ic{font-family:sans-serif;font-size:calc(28px * var(--rs,1));letter-spacing:0}
+.cat::after{content:"";flex:1;height:2px;background:linear-gradient(90deg,var(--c),transparent);opacity:.6;box-shadow:0 0 8px var(--c)}
+.cat.snack{--c:var(--yellow)}.cat.ramen{--c:var(--pink)}.cat.drink{--c:var(--teal)}
 .row::before{content:"";position:absolute;inset:0;border-radius:12px;pointer-events:none;opacity:0;
   background:linear-gradient(90deg,rgba(255,232,61,.55),rgba(255,63,164,.35))}
 .row::after{content:"";position:absolute;inset:0;border-radius:12px;pointer-events:none;opacity:0;
@@ -584,24 +589,42 @@ function stockState(s){
    ===================================================================== */
 const rowEls = new Map();
 
+// Menu groups, top to bottom. Items are sorted into a group by keywords in their name;
+// anything that matches nothing lands in Snacks.
+const CATEGORIES = [
+  { key: "snack", label: "SNACKS", icon: "\u{1F36B}" },
+  { key: "ramen", label: "RAMEN",  icon: "\u{1F35C}", re: /ramen|buldak|noodle|\bcup\b/i },
+  { key: "drink", label: "DRINKS", icon: "\u{1F964}", re: /pop|gatorade|jones|monster|\btea\b|coffee|juice|water|soda|energy|\bml\b|\d\s*ml/i },
+];
+function categoryOf(name){
+  return (CATEGORIES.find(c => c.re && c.re.test(name)) || CATEGORIES[0]).key;
+}
+
 function renderMenu(snacks){
-  snacks = [...snacks].sort((a, b) => a.item.localeCompare(b.item, undefined, { sensitivity: "base" }));
+  const byName = (a, b) => a.item.localeCompare(b.item, undefined, { sensitivity: "base" });
+  const groups = CATEGORIES.map(c => ({ ...c, items: snacks.filter(s => categoryOf(s.item) === c.key).sort(byName) }))
+                           .filter(g => g.items.length);
+  snacks = groups.flatMap(g => g.items);
   const el = $("menu");
-  el.style.gridTemplateRows = `repeat(${Math.max(snacks.length,1)},minmax(0,1fr))`;
-  // Text shrinks to fit when the sheet has more than 17 items (and never grows past normal size)
-  el.style.setProperty("--rs", Math.max(0.5, Math.min(1, 15.5 / Math.max(snacks.length, 1))).toFixed(3));
+  // Headers take a slimmer row than items
+  el.style.gridTemplateRows = groups.map(g => `minmax(0,.6fr) repeat(${g.items.length},minmax(0,1fr))`).join(" ") || "1fr";
+  // Text shrinks to fit when the sheet has lots of items (and never grows past normal size)
+  const units = Math.max(snacks.length + groups.length * 0.6, 1);
+  el.style.setProperty("--rs", Math.max(0.5, Math.min(1, 17.5 / units)).toFixed(3));
   rowEls.clear();
-  el.innerHTML = snacks.map((s, i) => {
-    const [name, vol] = splitName(s.item);
-    const st = stockState(s);
-    const fill = Math.max(0, Math.min(1, s.stock / (s.lowAt * 6)));
-    return `<div class="row ${st}" data-i="${i}">
+  let i = 0;
+  el.innerHTML = groups.map(g => `<div class="cat ${g.key}"><span class="ic">${g.icon}</span>${g.label}</div>` +
+    g.items.map((s, j) => {
+      const [name, vol] = splitName(s.item);
+      const st = stockState(s);
+      const fill = Math.max(0, Math.min(1, s.stock / (s.lowAt * 6)));
+      return `<div class="row ${st}${j % 2 ? "" : " alt"}" data-i="${i++}">
       <div class="nm">${esc(name)}${vol ? `<span class="vol">${esc(vol)}</span>` : ""}</div>
       <div class="pr">$${Number(s.price).toFixed(2)}</div>
       <div class="qty">${s.stock}</div>
       <div class="bar"><i style="--f:${fill.toFixed(3)}"></i><span class="so">SOLD OUT</span></div>
     </div>`;
-  }).join("");
+    }).join("")).join("");
   el.querySelectorAll(".row").forEach(r => rowEls.set(snacks[+r.dataset.i].item, r));
 }
 
