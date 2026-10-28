@@ -7,7 +7,7 @@ No coding needed. Takes about 20 minutes the first time.
 Open **Terminal** on the club computer (Ubuntu), paste this line, and press Enter:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Choc-Shake/compe-display/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/UAlbertaCompEClub/compe-display/main/install.sh | bash
 ```
 
 It will ask for your password, then walk you through setup:
