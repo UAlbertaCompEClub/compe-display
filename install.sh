@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # CompE Snack Bar display — installer for Ubuntu.
-#   curl -fsSL https://raw.githubusercontent.com/Choc-Shake/compe-display/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/UAlbertaCompEClub/compe-display/main/install.sh | bash
 # Run it again any time to update. Your settings (config.toml, robot-key.json) are kept.
 set -euo pipefail
 
-REPO="${COMPE_REPO:-https://github.com/Choc-Shake/compe-display.git}"
+REPO="${COMPE_REPO:-https://github.com/UAlbertaCompEClub/compe-display.git}"
 DIR="$HOME/compe-display"
 PORT=8787
 
