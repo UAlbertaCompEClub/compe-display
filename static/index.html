@@ -741,12 +741,13 @@ function nextTickerItem(){
   }
   return tickerQueue.shift();
 }
+const TICKER_SECONDS = 30; // a new ticker item every 30 seconds
 function playTicker(){
   const it = nextTickerItem(), el = $("ticker");
   if (!it) return setTimeout(playTicker, 2000);
   el.innerHTML = (it.tag ? `<b class="${TAG_CLASS[it.tag] || "c-y"}">${esc(it.tag)}</b>` : LOL) + esc(it.text);
   el.className = "tk-item"; void el.offsetWidth; el.className = "tk-item in";
-  const hold = 3500 + it.text.length * 55; // longer items stay up longer
+  const hold = TICKER_SECONDS * 1000 - 800 - 750; // full cycle (slide in + hold + slide out)
   setTimeout(() => {
     el.className = "tk-item out";
     setTimeout(playTicker, 750);
