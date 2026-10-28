@@ -549,8 +549,7 @@ const DATA = {
     "Why did the transistor go to school? To get a little more gain.",
     "How do you comfort a JavaScript bug? You console it.",
     "The best thing about a Boolean is that even if you're wrong, you're only off by a bit.",
-    "Why did the programmer go outside? Just kidding.",
-    "Computer? I HARDLY EVEN KNOW HER!"
+    "Why did the programmer go outside? Just kidding."
   ],
   linktree: "https://linktr.ee/compeclub"
 };
@@ -724,7 +723,6 @@ function playTicker(){
   if (!it) return setTimeout(playTicker, 2000);
   el.innerHTML = (it.tag ? `<b class="${TAG_CLASS[it.tag] || "c-y"}">${esc(it.tag)}</b>` : LOL) + esc(it.text);
   el.className = "tk-item"; void el.offsetWidth; el.className = "tk-item in";
-  if (/HARDLY EVEN KNOW HER/.test(it.text)) setTimeout(() => quirk("laugh"), 900); // the robot's favourite joke
   const hold = 3500 + it.text.length * 55; // longer items stay up longer
   setTimeout(() => {
     el.className = "tk-item out";
@@ -774,7 +772,7 @@ const QUIRKS = {
   scan:   { ms: 2800, lines: ["SCANNING FOR SNACKERS...", "TARGET: HUNGRY HUMAN.", "SCANNING... 100% CUTE."] },
   zap:    { ms: 2100, lines: ["BZZT! FULLY CHARGED.", "OW, STATIC!", "+5V ACQUIRED!"] },
   wave:   { ms: 3000, lines: ["HI THERE!", "HELLO, WORLD!", "HEY YOU! YES YOU!"] },
-  laugh:  { ms: 3000, lines: ["HA HA HA!", "LOL! 01001100 01001111 01001100", "HAHA, I'M DEAD. (I'M NOT.)"] },
+  laugh:  { ms: 3000, lines: ["HA HA HA!", "LOL! 01001100 01001111 01001100", "HAHA, I KILL ME."] },
 };
 let quirkTimer = null;
 function quirk(name){
@@ -788,8 +786,16 @@ function quirk(name){
   clearTimeout(quirkTimer);
   quirkTimer = setTimeout(() => bot.classList.remove("q-" + name), q.ms);
 }
-(function scheduleQuirk(){ setTimeout(() => { quirk(); scheduleQuirk(); }, (120 + Math.random() * 120) * 1000); })();
-addEventListener("keydown", e => { if (e.key.toLowerCase() === "q") quirk(); });
+// The robot's own joke: it tells it, pauses, then cracks itself up
+function tellJoke(){
+  const bot = $("bot");
+  if (bot.classList.contains("cheer")) return;
+  say("COMPUTER? I HARDLY EVEN KNOW HER!", 3600);
+  clearTimeout(quirkTimer);
+  quirkTimer = setTimeout(() => quirk("laugh"), 3000);
+}
+(function scheduleQuirk(){ setTimeout(() => { Math.random() < .15 ? tellJoke() : quirk(); scheduleQuirk(); }, (120 + Math.random() * 120) * 1000); })();
+addEventListener("keydown", e => { if (e.key.toLowerCase() === "q") quirk(); if (e.key.toLowerCase() === "j") tellJoke(); });
 
 let cheerTimer = null;
 function cheer(text){
