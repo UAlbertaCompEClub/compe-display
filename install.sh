@@ -20,7 +20,9 @@ BROWSER="$(command -v chromium || command -v chromium-browser)"
 
 say "Getting the display code"
 if [ -d "$DIR/.git" ]; then
-  git -C "$DIR" pull --ff-only
+  git -C "$DIR" remote set-url origin "$REPO"  # older installs pointed at a personal repo
+  git -C "$DIR" fetch -q --depth 1 origin main
+  git -C "$DIR" reset -q --hard origin/main
 else
   git clone --depth 1 "$REPO" "$DIR"
 fi

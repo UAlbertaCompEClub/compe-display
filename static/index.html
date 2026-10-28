@@ -99,6 +99,37 @@ body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased
 #bot.cheer .happy{opacity:1}
 #bot.cheer .led{animation:led .15s infinite alternate;fill:var(--yellow)}
 
+/* Quirks: a random one plays every few minutes (press Q to preview) */
+#bot{transform-origin:50% 60%}
+#bot .sleepy,#bot .xeyes{opacity:0}
+#bot.q-spin{animation:qSpin 1.3s cubic-bezier(.5,0,.3,1.3)}
+@keyframes qSpin{to{transform:rotate(360deg)}}
+#bot.q-flip{animation:qFlip 1.4s ease-in-out}
+@keyframes qFlip{0%{transform:translateY(0)}30%{transform:translateY(-30px) rotate(0)}70%{transform:translateY(-30px) rotate(-360deg)}100%{transform:translateY(0) rotate(-360deg)}}
+#bot.q-dance{animation:qDance .35s ease-in-out 8 alternate}
+@keyframes qDance{from{transform:rotate(-12deg) translateX(-4px)}to{transform:rotate(12deg) translateX(4px)}}
+#bot.q-dance .arm-l{animation:none;transform:rotate(120deg)}
+#bot.q-dance .arm-r{transform:rotate(-120deg)}
+#bot.q-glitch{animation:qGlitch .12s steps(2) 14}
+@keyframes qGlitch{0%{transform:translate(-4px,2px);filter:hue-rotate(90deg)}50%{transform:translate(4px,-2px) skewX(8deg);filter:hue-rotate(200deg)}100%{transform:none;filter:none}}
+#bot.q-glitch .eyes{opacity:0}
+#bot.q-glitch .xeyes{opacity:1}
+#bot.q-look .look{animation:qLook 3s ease-in-out}
+@keyframes qLook{0%,100%{transform:none}20%,40%{transform:translateX(-7px)}60%,80%{transform:translateX(7px)}}
+#bot.q-sleep .eyes{opacity:0}
+#bot.q-sleep .sleepy{opacity:1}
+#bot.q-sleep .bob{animation:bob 2.6s ease-in-out infinite alternate}
+#bot.q-sleep .led{animation:none;opacity:.2}
+#bot.q-scan .scan{animation:qScan .9s ease-in-out 3 alternate}
+@keyframes qScan{0%{opacity:1;transform:translateY(0)}100%{opacity:1;transform:translateY(40px)}}
+#bot.q-zap .sparks{animation:qZap .2s steps(2) 10}
+@keyframes qZap{0%{opacity:0}100%{opacity:1}}
+#bot.q-zap .led{animation:led .1s infinite alternate;fill:var(--yellow)}
+#bot.q-zap .bob{animation:qShake .08s linear 20}
+@keyframes qShake{0%{transform:translateX(-2px)}50%{transform:translateX(2px)}100%{transform:translateX(0)}}
+#bot.q-wave .arm-r{animation:wave2 1s ease-in-out 3}
+@keyframes wave2{0%,100%{transform:rotate(0)}50%{transform:rotate(-150deg)}}
+#bot.q-wave .arm-l{animation:none}
 .bubble{position:absolute;left:140px;top:2px;z-index:70;white-space:nowrap;
   font-family:var(--pixel);font-size:19px;color:#1a0b2e;background:var(--yellow);padding:14px 18px;border-radius:12px;
   box-shadow:5px 5px 0 var(--pink);
@@ -213,6 +244,8 @@ body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased
 .tk-item{width:100%;text-align:center;font-size:34px;font-weight:600;line-height:1.15;transform:translateX(-130%);
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tk-item b{font-family:var(--pixel);font-size:17px;font-weight:400;margin-right:16px;vertical-align:5px}
+.lol{display:inline-block;width:44px;height:44px;margin-right:16px;vertical-align:-9px;animation:lol .5s ease-in-out infinite alternate}
+@keyframes lol{from{transform:rotate(-10deg) translateY(1px)}to{transform:rotate(10deg) translateY(-3px)}}
 .tk-item.in{animation:tkIn .8s cubic-bezier(.2,.9,.3,1.08) forwards}
 .tk-item.out{animation:tkOut .7s cubic-bezier(.6,0,.9,.4) forwards}
 @keyframes tkIn{from{transform:translateX(-130%)}to{transform:translateX(0)}}
@@ -246,6 +279,9 @@ body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased
           <!-- antenna -->
           <line x1="70" y1="10" x2="70" y2="27" stroke="#c9a9ff" stroke-width="4" stroke-linecap="round"/>
           <circle class="led" cx="70" cy="9" r="7" fill="#ff3fa4"/>
+          <g class="sparks" stroke="#ffe83d" stroke-width="3" stroke-linecap="round" opacity="0">
+            <line x1="56" y1="2" x2="50" y2="-3"/><line x1="84" y1="2" x2="90" y2="-3"/><line x1="58" y1="14" x2="51" y2="17"/><line x1="82" y1="14" x2="89" y2="17"/>
+          </g>
           <!-- ears -->
           <rect x="12" y="44" width="14" height="26" rx="4" fill="#22f2d4"/>
           <rect x="114" y="44" width="14" height="26" rx="4" fill="#22f2d4"/>
@@ -253,12 +289,20 @@ body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased
           <rect x="22" y="25" width="96" height="66" rx="18" fill="#6a3bd8" stroke="#c9a9ff" stroke-width="3"/>
           <rect x="33" y="35" width="74" height="46" rx="11" fill="#0c0420"/>
           <!-- pixel eyes -->
+          <g class="look">
           <g class="eyes">
             <rect x="47" y="46" width="13" height="17" rx="2" fill="#22f2d4"/>
             <rect x="80" y="46" width="13" height="17" rx="2" fill="#22f2d4"/>
             <rect x="49" y="48" width="4" height="4" fill="#fff"/>
             <rect x="82" y="48" width="4" height="4" fill="#fff"/>
           </g>
+          </g>
+          <!-- sleepy and glitchy eyes -->
+          <g class="sleepy" fill="#22f2d4"><rect x="45" y="56" width="17" height="4"/><rect x="78" y="56" width="17" height="4"/></g>
+          <g class="xeyes" stroke="#ff3b5c" stroke-width="4" stroke-linecap="square">
+            <line x1="46" y1="47" x2="60" y2="61"/><line x1="60" y1="47" x2="46" y2="61"/><line x1="80" y1="47" x2="94" y2="61"/><line x1="94" y1="47" x2="80" y2="61"/>
+          </g>
+          <rect class="scan" x="35" y="37" width="70" height="4" fill="#ff3fa4" opacity="0"/>
           <!-- happy ^ ^ eyes -->
           <g class="happy" stroke="#ffe83d" stroke-width="5" fill="none" stroke-linecap="square">
             <polyline points="45,60 53,50 61,60"/>
@@ -534,6 +578,7 @@ function stockState(s){
 const rowEls = new Map();
 
 function renderMenu(snacks){
+  snacks = [...snacks].sort((a, b) => a.item.localeCompare(b.item, undefined, { sensitivity: "base" }));
   const el = $("menu");
   el.style.gridTemplateRows = `repeat(${Math.max(snacks.length,1)},minmax(0,1fr))`;
   // Text shrinks to fit when the sheet has more than 17 items (and never grows past normal size)
@@ -642,6 +687,12 @@ function renderQR(url){
 
 /* Ticker: one item at a time slides in from the left, pauses in the middle, slides out the right.
    Facts get a "DID YOU KNOW?" label, jokes get none, live headlines get "TECH NEWS". */
+// 11x11 pixel laughing face: Y = yellow, K = outline/eyes, M = mouth, T = tears
+const LOL_ROWS = ["...KKKKK...", "..KYYYYYK..", ".KYYYYYYYK.", "KYKKYYYKKYK", "KYYYYYYYYYK", "TYKKKKKKKYT",
+                  "KYKMMMMMKYK", "KYYKMMMKYYK", ".KYYKKKYYK.", "..KYYYYYK..", "...KKKKK..."];
+const LOL_COL = { Y: "#ffe83d", K: "#1a0b2e", M: "#ff3fa4", T: "#22f2d4" };
+const LOL = `<svg class="lol" viewBox="0 0 11 11" shape-rendering="crispEdges">${LOL_ROWS.map((r, y) =>
+  [...r].map((c, x) => LOL_COL[c] ? `<rect x="${x}" y="${y}" width="1" height="1" fill="${LOL_COL[c]}"/>` : "").join("")).join("")}</svg>`;
 const TAG_CLASS = { "DID YOU KNOW?": "c-t", "TECH NEWS": "c-p" };
 let tickerData = DATA, hnNews = [], tickerQueue = [], tickerStarted = false;
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -663,7 +714,7 @@ function nextTickerItem(){
 function playTicker(){
   const it = nextTickerItem(), el = $("ticker");
   if (!it) return setTimeout(playTicker, 2000);
-  el.innerHTML = (it.tag ? `<b class="${TAG_CLASS[it.tag] || "c-y"}">${esc(it.tag)}</b>` : "") + esc(it.text);
+  el.innerHTML = (it.tag ? `<b class="${TAG_CLASS[it.tag] || "c-y"}">${esc(it.tag)}</b>` : LOL) + esc(it.text);
   el.className = "tk-item"; void el.offsetWidth; el.className = "tk-item in";
   const hold = 3500 + it.text.length * 55; // longer items stay up longer
   setTimeout(() => {
@@ -703,10 +754,37 @@ function say(text, ms = 4000){
   clearTimeout(bubbleTimer);
   bubbleTimer = setTimeout(() => b.classList.remove("show"), ms);
 }
+// Quirky moves: one plays at random every 2-4 minutes, with a matching line
+const QUIRKS = {
+  spin:   { ms: 1400, lines: ["WHEEE!", "DO A BARREL ROLL!"] },
+  flip:   { ms: 1500, lines: ["DID YOU SEE THAT?!", "10/10 LANDING."] },
+  dance:  { ms: 2900, lines: ["BEEP BOP BOOP~", "DANCE.EXE RUNNING", "GOT THE MOVES."] },
+  glitch: { ms: 1800, lines: ["ERR0R... JK.", "SEGFAULT?! ...NOPE, FINE.", "BIT FLIP!"] },
+  look:   { ms: 3000, lines: ["...", "DID SOMEONE SAY SNACKS?", "WHO TOOK THE LAST BULDAK?"] },
+  sleep:  { ms: 6000, lines: ["ZZZ...", "SLEEP MODE... ZZZ", "DREAMING OF ELECTRIC SHEEP..."] },
+  scan:   { ms: 2800, lines: ["SCANNING FOR SNACKERS...", "TARGET: HUNGRY HUMAN.", "SCANNING... 100% CUTE."] },
+  zap:    { ms: 2100, lines: ["BZZT! FULLY CHARGED.", "OW, STATIC!", "+5V ACQUIRED!"] },
+  wave:   { ms: 3000, lines: ["HI THERE!", "HELLO, WORLD!", "HEY YOU! YES YOU!"] },
+};
+let quirkTimer = null;
+function quirk(name){
+  const bot = $("bot");
+  if (bot.classList.contains("cheer")) return;
+  name = name || Object.keys(QUIRKS)[Math.floor(Math.random() * Object.keys(QUIRKS).length)];
+  const q = QUIRKS[name];
+  bot.className.baseVal = ""; void bot.getBoundingClientRect();
+  bot.classList.add("q-" + name);
+  say(q.lines[Math.floor(Math.random() * q.lines.length)], Math.max(q.ms, 3500));
+  clearTimeout(quirkTimer);
+  quirkTimer = setTimeout(() => bot.classList.remove("q-" + name), q.ms);
+}
+(function scheduleQuirk(){ setTimeout(() => { quirk(); scheduleQuirk(); }, (120 + Math.random() * 120) * 1000); })();
+addEventListener("keydown", e => { if (e.key.toLowerCase() === "q") quirk(); });
+
 let cheerTimer = null;
 function cheer(text){
   const bot = $("bot");
-  bot.classList.remove("cheer"); void bot.getBoundingClientRect(); bot.classList.add("cheer");
+  clearTimeout(quirkTimer); bot.className.baseVal = ""; void bot.getBoundingClientRect(); bot.classList.add("cheer");
   clearTimeout(cheerTimer);
   cheerTimer = setTimeout(() => bot.classList.remove("cheer"), 2400);
   say(text, 4000);
